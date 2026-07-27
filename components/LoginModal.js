@@ -19,13 +19,17 @@ export default function LoginModal({ onClose, onLogin }) {
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Login error:', error);
+        throw error;
+      }
 
       if (data.user) {
         onLogin(data.user);
         onClose();
       }
     } catch (err) {
+      console.error('Login error details:', err);
       setError(err.message || 'Error al iniciar sesión');
     } finally {
       setLoading(false);
