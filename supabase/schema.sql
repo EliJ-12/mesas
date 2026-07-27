@@ -183,14 +183,14 @@ alter table categories enable row level security;
 
 -- Política simple: cualquier usuario autenticado (staff) puede leer/escribir.
 -- En producción, crea una tabla `staff` y roles (camarero/admin) si lo necesitas.
-create policy "staff_all_zones" on zones for all using (auth.role() = 'authenticated');
-create policy "staff_all_categories" on categories for all using (auth.role() = 'authenticated');
-create policy "staff_all_tables" on tables for all using (auth.role() = 'authenticated');
-create policy "staff_all_products" on products for all using (auth.role() = 'authenticated');
-create policy "staff_all_orders" on orders for all using (auth.role() = 'authenticated');
-create policy "staff_all_order_items" on order_items for all using (auth.role() = 'authenticated');
-create policy "staff_all_payments" on payments for all using (auth.role() = 'authenticated');
-create policy "staff_all_payment_items" on payment_items for all using (auth.role() = 'authenticated');
+create policy "staff_all_zones" on zones for all using (auth.uid() is not null);
+create policy "staff_all_categories" on categories for all using (auth.uid() is not null);
+create policy "staff_all_tables" on tables for all using (auth.uid() is not null);
+create policy "staff_all_products" on products for all using (auth.uid() is not null);
+create policy "staff_all_orders" on orders for all using (auth.uid() is not null);
+create policy "staff_all_order_items" on order_items for all using (auth.uid() is not null);
+create policy "staff_all_payments" on payments for all using (auth.uid() is not null);
+create policy "staff_all_payment_items" on payment_items for all using (auth.uid() is not null);
 
 -- =========================================================
 -- DATOS DE EJEMPLO (borra esto en producción)

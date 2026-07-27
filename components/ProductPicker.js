@@ -7,6 +7,9 @@ export default function ProductPicker({ tableId, onClose }) {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
+  const [showPriceModal, setShowPriceModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [customPrice, setCustomPrice] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -24,6 +27,20 @@ export default function ProductPicker({ tableId, onClose }) {
   const filtered = activeCategory
     ? products.filter((p) => p.category_id === activeCategory)
     : products;
+
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+    setCustomPrice(product.price.toString());
+    setShowPriceModal(true);
+  };
+
+  const handleAddWithPrice = async (useCustomPrice) => {
+    const priceToUse = useCustomPrice ? parseFloat(customPrice) : null;
+    await addProductToTable(tableId, selectedProduct, priceToUse);
+    setShowPriceModal(false);
+    setSelectedProduct(null);
+    setCustomPrice('');
+  };
 
   return (
     <div style={overlayStyle}>
@@ -51,9 +68,7 @@ export default function ProductPicker({ tableId, onClose }) {
           {filtered.map((p) => (
             <button
               key={p.id}
-              onClick={async () => {
-                await addProductToTable(tableId, p);
-              }}
+              onClick={() => handleProductClick(p)}
               style={productBtn}
             >
               {p.photo_url ? (
@@ -67,6 +82,67 @@ export default function ProductPicker({ tableId, onClose }) {
           ))}
         </div>
       </div>
+
+      {showPriceModal && selectedProduct && (
+        <div style={priceModalOverlay}>
+          <div style={priceModalStyle}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <h3 style={{ margin: 0 }}>Modificar precio</h3>
+              <button onClick={() => setShowPriceModal(false)} style={closeBtn}>✕</button>
+            </div>
+            
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>{selectedProduct.name}</div>
+              <div style={{ fontSize: 12, opacity: 0.7 }}>Precio original: {selectedProduct.price.toFixed(2)} €</div>
+            </div>
+
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600 }}>
+                Precio a usar (€)
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                value={customPrice}
+                onChange={(e) => setCustomPrice(e.target.value)}
+                style={inputStyle}
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button
+                onClick={() => handleAddWithPrice(false)}
+                style={{
+                  flex: 1,
+                  padding: 12,
+                  borderRadius: 8,
+                  border: '1px solid #ddd',
+                  background: '#fff',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                }}
+              >
+                Usar precio original
+              </button>
+              <button
+                onClick={() => handleAddWithPrice(true)}
+                style={{
+                  flex: 1,
+                  padding: 12,
+                  borderRadius: 8,
+                  border: 'none',
+                  background: '#222',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                }}
+              >
+                Usar precio modificado
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -88,4 +164,15 @@ const chip = (active) => ({
 const productBtn = {
   border: '1px solid #eee', borderRadius: 10, padding: 8, textAlign: 'left',
   background: '#fafafa', cursor: 'pointer',
+};
+const priceModalOverlay = {
+  position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)',
+  display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 60,
+};
+const priceModalStyle = {
+  background: '#fff', width: '90%', maxWidth: 400, borderRadius: 16, padding: 24,
+};
+const inputStyle = {
+  width: '100%', padding: 12, borderRadius: 8, border: '1px solid #ddd',
+  fontSize: 14, boxSizing: 'border-box',
 };
