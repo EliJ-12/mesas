@@ -126,23 +126,23 @@ const overlayStyle = {
 const modalStyle = {
   background: '#fff',
   width: '90%',
-  maxWidth: 400,
-  borderRadius: 16,
-  padding: 24,
+  maxWidth: 350,
+  borderRadius: 12,
+  padding: 16,
 };
 
 const closeBtn = {
   border: 'none',
   background: 'none',
-  fontSize: 20,
+  fontSize: 18,
   cursor: 'pointer',
 };
 
 const inputStyle = {
   width: '100%',
-  padding: 12,
-  borderRadius: 8,
+  padding: 10,
+  borderRadius: 6,
   border: '1px solid #ddd',
-  fontSize: 14,
+  fontSize: 13,
   boxSizing: 'border-box',
 };

@@ -132,21 +132,22 @@ export default function CategoriasPage() {
   if (authLoading || loading) return <div style={{ padding: 24 }}>Cargando...</div>;
 
   return (
-    <div style={{ padding: 24, maxWidth: 800, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h1 style={{ margin: 0 }}>Gestión de Categorías</h1>
-        <div style={{ display: 'flex', gap: 10 }}>
+    <div style={{ padding: 16, maxWidth: 800, margin: '0 auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
+        <h1 style={{ margin: 0, fontSize: 20 }}>Categorías</h1>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <button
             onClick={() => router.push('/productos')}
             style={{
-              padding: 10,
-              borderRadius: 8,
+              padding: 8,
+              borderRadius: 6,
               border: '1px solid #ddd',
               background: '#fff',
               cursor: 'pointer',
+              fontSize: 12,
             }}
           >
-            ← Volver a productos
+            ← Productos
           </button>
           <button
             onClick={() => {
@@ -155,46 +156,48 @@ export default function CategoriasPage() {
               setShowModal(true);
             }}
             style={{
-              padding: '10px 20px',
-              borderRadius: 8,
+              padding: '8px 16px',
+              borderRadius: 6,
               border: 'none',
               background: '#222',
               color: '#fff',
               cursor: 'pointer',
               fontWeight: 600,
+              fontSize: 12,
             }}
           >
-            + Nueva categoría
+            + Nueva
           </button>
         </div>
       </div>
 
-      <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #eee', overflow: 'hidden' }}>
+      <div style={{ background: '#fff', borderRadius: 10, border: '1px solid #eee', overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ background: '#fafafa', borderBottom: '2px solid #eee' }}>
-              <th style={{ padding: 12, textAlign: 'left', fontSize: 13, fontWeight: 600 }}>Nombre</th>
-              <th style={{ padding: 12, textAlign: 'center', fontSize: 13, fontWeight: 600 }}>Orden</th>
-              <th style={{ padding: 12, textAlign: 'center', fontSize: 13, fontWeight: 600 }}>Acciones</th>
+              <th style={{ padding: 10, textAlign: 'left', fontSize: 12, fontWeight: 600 }}>Nombre</th>
+              <th style={{ padding: 10, textAlign: 'center', fontSize: 12, fontWeight: 600 }}>Orden</th>
+              <th style={{ padding: 10, textAlign: 'center', fontSize: 12, fontWeight: 600 }}>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {categories.map((c, index) => (
               <tr key={c.id} style={{ borderBottom: '1px solid #eee' }}>
-                <td style={{ padding: 12, fontWeight: 600 }}>{c.name}</td>
-                <td style={{ padding: 12, textAlign: 'center', opacity: 0.7 }}>{c.sort_order}</td>
-                <td style={{ padding: 12, textAlign: 'center' }}>
+                <td style={{ padding: 10, fontWeight: 600, fontSize: 13 }}>{c.name}</td>
+                <td style={{ padding: 10, textAlign: 'center', opacity: 0.7, fontSize: 12 }}>{c.sort_order}</td>
+                <td style={{ padding: 10, textAlign: 'center' }}>
                   <button
                     onClick={() => handleMoveUp(index)}
                     disabled={index === 0}
                     style={{
-                      padding: 6,
+                      padding: 4,
                       borderRadius: 4,
                       border: '1px solid #ddd',
                       background: '#fff',
                       cursor: index === 0 ? 'not-allowed' : 'pointer',
                       opacity: index === 0 ? 0.4 : 1,
                       marginRight: 4,
+                      fontSize: 12,
                     }}
                   >
                     ↑
@@ -203,13 +206,14 @@ export default function CategoriasPage() {
                     onClick={() => handleMoveDown(index)}
                     disabled={index === categories.length - 1}
                     style={{
-                      padding: 6,
+                      padding: 4,
                       borderRadius: 4,
                       border: '1px solid #ddd',
                       background: '#fff',
                       cursor: index === categories.length - 1 ? 'not-allowed' : 'pointer',
                       opacity: index === categories.length - 1 ? 0.4 : 1,
                       marginRight: 4,
+                      fontSize: 12,
                     }}
                   >
                     ↓
@@ -217,12 +221,13 @@ export default function CategoriasPage() {
                   <button
                     onClick={() => handleEdit(c)}
                     style={{
-                      padding: 6,
+                      padding: 4,
                       borderRadius: 4,
                       border: '1px solid #ddd',
                       background: '#fff',
                       cursor: 'pointer',
                       marginRight: 4,
+                      fontSize: 12,
                     }}
                   >
                     ✏️
@@ -230,11 +235,12 @@ export default function CategoriasPage() {
                   <button
                     onClick={() => handleDelete(c.id)}
                     style={{
-                      padding: 6,
+                      padding: 4,
                       borderRadius: 4,
                       border: '1px solid #ddd',
                       background: '#fff',
                       cursor: 'pointer',
+                      fontSize: 12,
                     }}
                   >
                     🗑️
@@ -250,13 +256,13 @@ export default function CategoriasPage() {
         <div style={overlayStyle}>
           <div style={modalStyle}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2>{editingCategory ? 'Editar categoría' : 'Nueva categoría'}</h2>
+              <h2 style={{ fontSize: 16 }}>{editingCategory ? 'Editar' : 'Nueva'}</h2>
               <button onClick={() => setShowModal(false)} style={closeBtn}>✕</button>
             </div>
 
-            <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600 }}>
+            <form onSubmit={handleSubmit} style={{ marginTop: 16 }}>
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: 'block', marginBottom: 4, fontSize: 12, fontWeight: 600 }}>
                   Nombre
                 </label>
                 <input
@@ -268,8 +274,8 @@ export default function CategoriasPage() {
                 />
               </div>
 
-              <div style={{ marginBottom: 20 }}>
-                <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600 }}>
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ display: 'block', marginBottom: 4, fontSize: 12, fontWeight: 600 }}>
                   Orden
                 </label>
                 <input
@@ -285,17 +291,17 @@ export default function CategoriasPage() {
                 type="submit"
                 style={{
                   width: '100%',
-                  padding: 14,
-                  borderRadius: 10,
+                  padding: 12,
+                  borderRadius: 8,
                   border: 'none',
                   background: '#222',
                   color: '#fff',
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: 600,
                   cursor: 'pointer',
                 }}
               >
-                {editingCategory ? 'Guardar cambios' : 'Crear categoría'}
+                {editingCategory ? 'Guardar' : 'Crear'}
               </button>
             </form>
           </div>
@@ -318,23 +324,23 @@ const overlayStyle = {
 const modalStyle = {
   background: '#fff',
   width: '90%',
-  maxWidth: 400,
-  borderRadius: 16,
-  padding: 24,
+  maxWidth: 350,
+  borderRadius: 12,
+  padding: 16,
 };
 
 const closeBtn = {
   border: 'none',
   background: 'none',
-  fontSize: 20,
+  fontSize: 18,
   cursor: 'pointer',
 };
 
 const inputStyle = {
   width: '100%',
-  padding: 12,
-  borderRadius: 8,
+  padding: 10,
+  borderRadius: 6,
   border: '1px solid #ddd',
-  fontSize: 14,
+  fontSize: 13,
   boxSizing: 'border-box',
 };

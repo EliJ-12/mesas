@@ -52,10 +52,10 @@ export default function MesasPage() {
     .sort((a, b) => (a[1]?.sort_order || 0) - (b[1]?.sort_order || 0));
 
   return (
-    <div style={{ padding: 24, maxWidth: 1000, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h1 style={{ margin: 0 }}>Mesas</h1>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+    <div style={{ padding: 16, maxWidth: 1000, margin: '0 auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
+        <h1 style={{ margin: 0, fontSize: 24 }}>Mesas</h1>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
           <Link
             href="/mesas/gestion"
             style={{
@@ -64,12 +64,12 @@ export default function MesasPage() {
               border: '1px solid #ddd',
               background: '#fff',
               cursor: 'pointer',
-              fontSize: 13,
+              fontSize: 12,
               textDecoration: 'none',
               color: '#222',
             }}
           >
-            🪑 Gestionar mesas
+            🪑 Mesas
           </Link>
           <Link
             href="/productos"
@@ -79,7 +79,7 @@ export default function MesasPage() {
               border: '1px solid #ddd',
               background: '#fff',
               cursor: 'pointer',
-              fontSize: 13,
+              fontSize: 12,
               textDecoration: 'none',
               color: '#222',
             }}
@@ -94,14 +94,13 @@ export default function MesasPage() {
               border: '1px solid #ddd',
               background: '#fff',
               cursor: 'pointer',
-              fontSize: 13,
+              fontSize: 12,
               textDecoration: 'none',
               color: '#222',
             }}
           >
             💰 Caja
           </Link>
-          <span style={{ fontSize: 14, opacity: 0.6 }}>{user.email}</span>
           <button
             onClick={logout}
             style={{
@@ -110,24 +109,24 @@ export default function MesasPage() {
               border: '1px solid #ddd',
               background: '#fff',
               cursor: 'pointer',
-              fontSize: 13,
+              fontSize: 12,
             }}
           >
-            Cerrar sesión
+            Salir
           </button>
         </div>
       </div>
 
       {zones.map(([zoneId, zone]) => (
-        <div key={zoneId} style={{ marginBottom: 32 }}>
-          <h2 style={{ fontSize: 16, textTransform: 'uppercase', opacity: 0.6, marginBottom: 12 }}>
+        <div key={zoneId} style={{ marginBottom: 24 }}>
+          <h2 style={{ fontSize: 14, textTransform: 'uppercase', opacity: 0.6, marginBottom: 12 }}>
             {zone?.name}
           </h2>
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-              gap: 12,
+              gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
+              gap: 10,
             }}
           >
             {tables

@@ -175,16 +175,16 @@ const overlayStyle = {
   display: 'flex', alignItems: 'flex-end', zIndex: 50,
 };
 const modalStyle = {
-  background: '#fff', width: '100%', maxHeight: '85vh', overflowY: 'auto',
-  borderRadius: '16px 16px 0 0', padding: 20,
+  background: '#fff', width: '100%', maxHeight: '90vh', overflowY: 'auto',
+  borderRadius: '16px 16px 0 0', padding: 16,
 };
-const closeBtn = { border: 'none', background: 'none', fontSize: 20, cursor: 'pointer' };
+const closeBtn = { border: 'none', background: 'none', fontSize: 18, cursor: 'pointer' };
 const chip = (active) => ({
-  padding: '8px 14px', borderRadius: 20, border: '1px solid #ccc',
+  padding: '6px 12px', borderRadius: 16, border: '1px solid #ccc',
   background: active ? '#222' : '#fff', color: active ? '#fff' : '#222',
-  fontSize: 13, cursor: 'pointer',
+  fontSize: 11, cursor: 'pointer',
 });
 const qtyBtn = {
-  width: 28, height: 28, borderRadius: '50%', border: '1px solid #ccc',
-  background: '#fff', cursor: 'pointer', fontSize: 16,
+  width: 24, height: 24, borderRadius: '50%', border: '1px solid #ccc',
+  background: '#fff', cursor: 'pointer', fontSize: 14,
 };

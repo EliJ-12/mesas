@@ -58,26 +58,26 @@ export default function MesaDetailPage() {
   const totalPaid = total - totalPending;
 
   return (
-    <div style={{ padding: 20, maxWidth: 600, margin: '0 auto', paddingBottom: 100 }}>
-      <button onClick={() => router.push('/mesas')} style={{ border: 'none', background: 'none', marginBottom: 12, cursor: 'pointer' }}>
-        ← Volver a mesas
+    <div style={{ padding: 16, maxWidth: 600, margin: '0 auto', paddingBottom: 120 }}>
+      <button onClick={() => router.push('/mesas')} style={{ border: 'none', background: 'none', marginBottom: 10, cursor: 'pointer', fontSize: 14 }}>
+        ← Volver
       </button>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>Mesa</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <h1 style={{ margin: 0, fontSize: 24 }}>Mesa</h1>
         <button
           onClick={toggleTableStatus}
           style={{
-            padding: '8px 16px',
-            borderRadius: 8,
+            padding: '6px 12px',
+            borderRadius: 6,
             border: '1px solid #ddd',
             background: '#fff',
             cursor: 'pointer',
-            fontSize: 13,
+            fontSize: 12,
             fontWeight: 600,
           }}
         >
-          🔄 Cambiar estado
+          🔄 Estado
         </button>
       </div>
 
@@ -202,14 +202,14 @@ export default function MesaDetailPage() {
         })}
       </div>
 
-      <div style={{ marginTop: 24, padding: 16, background: '#fafafa', borderRadius: 12 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
+      <div style={{ marginTop: 20, padding: 14, background: '#fafafa', borderRadius: 10 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
           <span>Total</span><span>{total.toFixed(2)} €</span>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, color: '#43a047' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#43a047' }}>
           <span>Pagado</span><span>{totalPaid.toFixed(2)} €</span>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 16, fontWeight: 700 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 15, fontWeight: 700 }}>
           <span>Pendiente</span><span>{totalPending.toFixed(2)} €</span>
         </div>
       </div>
@@ -217,11 +217,11 @@ export default function MesaDetailPage() {
       {/* Botones fijos abajo */}
       <div style={{
         position: 'fixed', bottom: 0, left: 0, right: 0, background: '#fff',
-        padding: 16, display: 'flex', gap: 10, borderTop: '1px solid #eee',
+        padding: 12, display: 'flex', gap: 8, borderTop: '1px solid #eee',
         flexWrap: 'wrap',
       }}>
         <button onClick={() => setShowPicker(true)} style={secondaryBtn}>
-          + Añadir producto
+          + Producto
         </button>
         <button
           onClick={markAsToPay}
@@ -234,7 +234,7 @@ export default function MesaDetailPage() {
             color: '#e53935',
           }}
         >
-          🔔 Pedir cuenta
+          🔔 Cuenta
         </button>
         <button
           onClick={() => setShowCheckout(true)}
@@ -254,14 +254,14 @@ export default function MesaDetailPage() {
 }
 
 const qtyBtn = {
-  width: 30, height: 30, borderRadius: '50%', border: '1px solid #ccc',
-  background: '#fff', cursor: 'pointer', fontSize: 16,
+  width: 28, height: 28, borderRadius: '50%', border: '1px solid #ccc',
+  background: '#fff', cursor: 'pointer', fontSize: 14,
 };
 const secondaryBtn = {
-  flex: 1, padding: 14, borderRadius: 10, border: '1px solid #222',
-  background: '#fff', color: '#222', fontWeight: 600, cursor: 'pointer',
+  flex: 1, padding: 10, borderRadius: 8, border: '1px solid #222',
+  background: '#fff', color: '#222', fontWeight: 600, cursor: 'pointer', fontSize: 13,
 };
 const primaryBtn = {
-  flex: 1, padding: 14, borderRadius: 10, border: 'none',
-  background: '#222', color: '#fff', fontWeight: 600, cursor: 'pointer',
+  flex: 1, padding: 10, borderRadius: 8, border: 'none',
+  background: '#222', color: '#fff', fontWeight: 600, cursor: 'pointer', fontSize: 13,
 };

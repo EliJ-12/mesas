@@ -104,33 +104,35 @@ export default function ProductosPage() {
   if (authLoading || loading) return <div style={{ padding: 24 }}>Cargando...</div>;
 
   return (
-    <div style={{ padding: 24, maxWidth: 1000, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h1 style={{ margin: 0 }}>Gestión de Productos</h1>
-        <div style={{ display: 'flex', gap: 10 }}>
+    <div style={{ padding: 16, maxWidth: 1000, margin: '0 auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
+        <h1 style={{ margin: 0, fontSize: 20 }}>Productos</h1>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <button
             onClick={() => router.push('/mesas')}
             style={{
-              padding: 10,
-              borderRadius: 8,
+              padding: 8,
+              borderRadius: 6,
               border: '1px solid #ddd',
               background: '#fff',
               cursor: 'pointer',
+              fontSize: 12,
             }}
           >
-            ← Volver a mesas
+            ← Mesas
           </button>
           <button
             onClick={() => router.push('/categorias')}
             style={{
-              padding: 10,
-              borderRadius: 8,
+              padding: 8,
+              borderRadius: 6,
               border: '1px solid #ddd',
               background: '#fff',
               cursor: 'pointer',
+              fontSize: 12,
             }}
           >
-            📁 Gestionar categorías
+            📁 Categorías
           </button>
           <button
             onClick={() => {
@@ -139,52 +141,53 @@ export default function ProductosPage() {
               setShowModal(true);
             }}
             style={{
-              padding: '10px 20px',
-              borderRadius: 8,
+              padding: '8px 16px',
+              borderRadius: 6,
               border: 'none',
               background: '#222',
               color: '#fff',
               cursor: 'pointer',
               fontWeight: 600,
+              fontSize: 12,
             }}
           >
-            + Nuevo producto
+            + Nuevo
           </button>
         </div>
       </div>
 
-      <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #eee', overflow: 'hidden' }}>
+      <div style={{ background: '#fff', borderRadius: 10, border: '1px solid #eee', overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ background: '#fafafa', borderBottom: '2px solid #eee' }}>
-              <th style={{ padding: 12, textAlign: 'left', fontSize: 13, fontWeight: 600 }}>Producto</th>
-              <th style={{ padding: 12, textAlign: 'left', fontSize: 13, fontWeight: 600 }}>Categoría</th>
-              <th style={{ padding: 12, textAlign: 'right', fontSize: 13, fontWeight: 600 }}>Precio</th>
-              <th style={{ padding: 12, textAlign: 'center', fontSize: 13, fontWeight: 600 }}>Estado</th>
-              <th style={{ padding: 12, textAlign: 'center', fontSize: 13, fontWeight: 600 }}>Acciones</th>
+              <th style={{ padding: 10, textAlign: 'left', fontSize: 12, fontWeight: 600 }}>Producto</th>
+              <th style={{ padding: 10, textAlign: 'left', fontSize: 12, fontWeight: 600 }}>Categoría</th>
+              <th style={{ padding: 10, textAlign: 'right', fontSize: 12, fontWeight: 600 }}>Precio</th>
+              <th style={{ padding: 10, textAlign: 'center', fontSize: 12, fontWeight: 600 }}>Estado</th>
+              <th style={{ padding: 10, textAlign: 'center', fontSize: 12, fontWeight: 600 }}>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {products.map((p) => (
               <tr key={p.id} style={{ borderBottom: '1px solid #eee' }}>
-                <td style={{ padding: 12 }}>
-                  <div style={{ fontWeight: 600 }}>{p.name}</div>
+                <td style={{ padding: 10 }}>
+                  <div style={{ fontWeight: 600, fontSize: 13 }}>{p.name}</div>
                   {p.photo_url && (
-                    <img src={p.photo_url} alt="" style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 4, marginTop: 4 }} />
+                    <img src={p.photo_url} alt="" style={{ width: 32, height: 32, objectFit: 'cover', borderRadius: 4, marginTop: 4 }} />
                   )}
                 </td>
-                <td style={{ padding: 12, opacity: 0.7 }}>{p.categories?.name || '-'}</td>
-                <td style={{ padding: 12, textAlign: 'right', fontWeight: 600 }}>{p.price.toFixed(2)} €</td>
-                <td style={{ padding: 12, textAlign: 'center' }}>
+                <td style={{ padding: 10, opacity: 0.7, fontSize: 12 }}>{p.categories?.name || '-'}</td>
+                <td style={{ padding: 10, textAlign: 'right', fontWeight: 600, fontSize: 13 }}>{p.price.toFixed(2)} €</td>
+                <td style={{ padding: 10, textAlign: 'center' }}>
                   <button
                     onClick={() => handleToggleActive(p)}
                     style={{
-                      padding: '4px 12px',
-                      borderRadius: 20,
+                      padding: '3px 8px',
+                      borderRadius: 12,
                       border: 'none',
                       background: p.active ? '#e8f5e9' : '#ffebee',
                       color: p.active ? '#43a047' : '#e53935',
-                      fontSize: 12,
+                      fontSize: 10,
                       fontWeight: 600,
                       cursor: 'pointer',
                     }}
@@ -192,16 +195,17 @@ export default function ProductosPage() {
                     {p.active ? 'Activo' : 'Inactivo'}
                   </button>
                 </td>
-                <td style={{ padding: 12, textAlign: 'center' }}>
+                <td style={{ padding: 10, textAlign: 'center' }}>
                   <button
                     onClick={() => handleEdit(p)}
                     style={{
-                      padding: 6,
+                      padding: 4,
                       borderRadius: 4,
                       border: '1px solid #ddd',
                       background: '#fff',
                       cursor: 'pointer',
                       marginRight: 4,
+                      fontSize: 12,
                     }}
                   >
                     ✏️
@@ -209,11 +213,12 @@ export default function ProductosPage() {
                   <button
                     onClick={() => handleDelete(p.id)}
                     style={{
-                      padding: 6,
+                      padding: 4,
                       borderRadius: 4,
                       border: '1px solid #ddd',
                       background: '#fff',
                       cursor: 'pointer',
+                      fontSize: 12,
                     }}
                   >
                     🗑️
@@ -229,13 +234,13 @@ export default function ProductosPage() {
         <div style={overlayStyle}>
           <div style={modalStyle}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2>{editingProduct ? 'Editar producto' : 'Nuevo producto'}</h2>
+              <h2 style={{ fontSize: 16 }}>{editingProduct ? 'Editar' : 'Nuevo'}</h2>
               <button onClick={() => setShowModal(false)} style={closeBtn}>✕</button>
             </div>
 
-            <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600 }}>
+            <form onSubmit={handleSubmit} style={{ marginTop: 16 }}>
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: 'block', marginBottom: 4, fontSize: 12, fontWeight: 600 }}>
                   Nombre
                 </label>
                 <input
@@ -247,8 +252,8 @@ export default function ProductosPage() {
                 />
               </div>
 
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600 }}>
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: 'block', marginBottom: 4, fontSize: 12, fontWeight: 600 }}>
                   Precio (€)
                 </label>
                 <input
@@ -261,8 +266,8 @@ export default function ProductosPage() {
                 />
               </div>
 
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600 }}>
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: 'block', marginBottom: 4, fontSize: 12, fontWeight: 600 }}>
                   Categoría
                 </label>
                 <select
@@ -277,8 +282,8 @@ export default function ProductosPage() {
                 </select>
               </div>
 
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600 }}>
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: 'block', marginBottom: 4, fontSize: 12, fontWeight: 600 }}>
                   URL de foto
                 </label>
                 <input
@@ -290,15 +295,15 @@ export default function ProductosPage() {
                 />
               </div>
 
-              <div style={{ marginBottom: 20 }}>
+              <div style={{ marginBottom: 16 }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
                   <input
                     type="checkbox"
                     checked={formData.active}
                     onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                    style={{ width: 18, height: 18 }}
+                    style={{ width: 16, height: 16 }}
                   />
-                  <span style={{ fontSize: 14, fontWeight: 600 }}>Producto activo</span>
+                  <span style={{ fontSize: 12, fontWeight: 600 }}>Producto activo</span>
                 </label>
               </div>
 
@@ -306,17 +311,17 @@ export default function ProductosPage() {
                 type="submit"
                 style={{
                   width: '100%',
-                  padding: 14,
-                  borderRadius: 10,
+                  padding: 12,
+                  borderRadius: 8,
                   border: 'none',
                   background: '#222',
                   color: '#fff',
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: 600,
                   cursor: 'pointer',
                 }}
               >
-                {editingProduct ? 'Guardar cambios' : 'Crear producto'}
+                {editingProduct ? 'Guardar' : 'Crear'}
               </button>
             </form>
           </div>
@@ -339,23 +344,23 @@ const overlayStyle = {
 const modalStyle = {
   background: '#fff',
   width: '90%',
-  maxWidth: 450,
-  borderRadius: 16,
-  padding: 24,
+  maxWidth: 400,
+  borderRadius: 12,
+  padding: 16,
 };
 
 const closeBtn = {
   border: 'none',
   background: 'none',
-  fontSize: 20,
+  fontSize: 18,
   cursor: 'pointer',
 };
 
 const inputStyle = {
   width: '100%',
-  padding: 12,
-  borderRadius: 8,
+  padding: 10,
+  borderRadius: 6,
   border: '1px solid #ddd',
-  fontSize: 14,
+  fontSize: 13,
   boxSizing: 'border-box',
 };

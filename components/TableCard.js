@@ -17,19 +17,19 @@ export default function TableCard({ table }) {
         display: 'block',
         background: style.bg,
         border: `2px solid ${style.border}`,
-        borderRadius: 12,
-        padding: '16px',
+        borderRadius: 10,
+        padding: '12px',
         textDecoration: 'none',
         color: '#222',
-        minHeight: 110,
+        minHeight: 90,
         transition: 'transform 0.1s',
       }}
     >
-      <div style={{ fontSize: 22, fontWeight: 700 }}>Mesa {table.number}</div>
-      <div style={{ fontSize: 12, opacity: 0.7, marginBottom: 8 }}>{table.zones?.name}</div>
-      <div style={{ fontSize: 12, fontWeight: 600, color: style.border }}>{style.label}</div>
+      <div style={{ fontSize: 18, fontWeight: 700 }}>Mesa {table.number}</div>
+      <div style={{ fontSize: 11, opacity: 0.7, marginBottom: 6 }}>{table.zones?.name}</div>
+      <div style={{ fontSize: 11, fontWeight: 600, color: style.border }}>{style.label}</div>
       {table.total > 0 && (
-        <div style={{ fontSize: 18, fontWeight: 700, marginTop: 6 }}>
+        <div style={{ fontSize: 16, fontWeight: 700, marginTop: 6 }}>
           {table.total.toFixed(2)} €
         </div>
       )}
