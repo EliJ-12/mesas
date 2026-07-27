@@ -23,7 +23,7 @@ insert into zones (name, sort_order) values ('Interior', 1), ('Exterior', 2);
 create table tables (
   id uuid primary key default uuid_generate_v4(),
   number int not null,
-  zone_id uuid references zones(id) not null,
+  zone_id uuid references zones(id) on delete cascade not null,
   status text not null default 'free'
     check (status in ('free', 'occupied', 'to_pay')),
   -- 'free' = libre, 'occupied' = con comanda abierta, 'to_pay' = pidió cuenta
@@ -58,7 +58,7 @@ create table products (
 -- ---------------------------------------------------------
 create table orders (
   id uuid primary key default uuid_generate_v4(),
-  table_id uuid references tables(id) not null,
+  table_id uuid references tables(id) on delete cascade not null,
   status text not null default 'open'
     check (status in ('open', 'closed')),
   opened_at timestamptz default now(),
@@ -71,7 +71,7 @@ create table orders (
 -- ---------------------------------------------------------
 create table order_items (
   id uuid primary key default uuid_generate_v4(),
-  order_id uuid references orders(id) not null,
+  order_id uuid references orders(id) on delete cascade not null,
   product_id uuid references products(id) not null,
   product_name text not null,      -- snapshot por si cambia el producto luego
   unit_price numeric(10,2) not null,

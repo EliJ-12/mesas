@@ -75,11 +75,15 @@ export default function MesasGestionPage() {
 
   const handleDelete = async (id) => {
     if (!confirm('¿Eliminar esta mesa?')) return;
+    console.log('Intentando eliminar mesa con ID:', id);
+
     const { error } = await supabase.from('tables').delete().eq('id', id);
     if (error) {
-      alert('Error: ' + error.message);
+      console.error('Error al eliminar mesa:', error);
+      alert('Error al eliminar: ' + error.message);
       return;
     }
+    console.log('Mesa eliminada correctamente');
     loadData();
   };
 
