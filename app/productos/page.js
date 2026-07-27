@@ -121,6 +121,18 @@ export default function ProductosPage() {
             ← Volver a mesas
           </button>
           <button
+            onClick={() => router.push('/categorias')}
+            style={{
+              padding: 10,
+              borderRadius: 8,
+              border: '1px solid #ddd',
+              background: '#fff',
+              cursor: 'pointer',
+            }}
+          >
+            📁 Gestionar categorías
+          </button>
+          <button
             onClick={() => {
               setEditingProduct(null);
               setFormData({ name: '', price: '', category_id: '', photo_url: '', active: true });
