@@ -13,11 +13,16 @@ export default function LoginModal({ onClose, onLogin }) {
     setLoading(true);
     setError('');
 
+    console.log('Intentando login con email:', email);
+    console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
+
+      console.log('Login response:', { data, error });
 
       if (error) {
         console.error('Login error:', error);
@@ -25,6 +30,7 @@ export default function LoginModal({ onClose, onLogin }) {
       }
 
       if (data.user) {
+        console.log('Login exitoso, usuario:', data.user);
         onLogin(data.user);
         onClose();
       }
