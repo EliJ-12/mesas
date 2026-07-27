@@ -3,6 +3,9 @@ import { AuthProvider } from '@/lib/auth';
 export const metadata = {
   title: 'Gestión de Mesas',
   description: 'App de gestión de mesas en tiempo real',
+  icons: {
+    icon: '/icon.jpg',
+  },
 };
 
 export default function RootLayout({ children }) {
