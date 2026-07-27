@@ -12,6 +12,8 @@ export default function MesaDetailPage() {
   const { order, items, loading } = useOrderRealtime(id);
   const [showPicker, setShowPicker] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [editingPriceItem, setEditingPriceItem] = useState(null);
+  const [customPrice, setCustomPrice] = useState('');
 
   const markAsToPay = async () => {
     const { error } = await supabase.from('tables').update({ status: 'to_pay' }).eq('id', id);
@@ -29,6 +31,24 @@ export default function MesaDetailPage() {
     if (error) {
       alert('Error al cambiar estado de la mesa: ' + error.message);
     }
+  };
+
+  const handleEditPrice = (item) => {
+    setEditingPriceItem(item);
+    setCustomPrice(item.unit_price.toString());
+  };
+
+  const savePrice = async () => {
+    const { error } = await supabase
+      .from('order_items')
+      .update({ unit_price: parseFloat(customPrice) })
+      .eq('id', editingPriceItem.id);
+    if (error) {
+      alert('Error al modificar precio: ' + error.message);
+      return;
+    }
+    setEditingPriceItem(null);
+    setCustomPrice('');
   };
 
   if (loading) return <div style={{ padding: 24 }}>Cargando...</div>;
@@ -79,9 +99,77 @@ export default function MesaDetailPage() {
               <div>
                 <div style={{ fontWeight: 600 }}>{item.product_name}</div>
                 <div style={{ fontSize: 12, opacity: 0.6 }}>
-                  {item.unit_price.toFixed(2)} € / ud.
-                  {item.paid_quantity > 0 && (
-                    <span style={{ color: '#43a047' }}> · {item.paid_quantity} pagada(s)</span>
+                  {editingPriceItem?.id === item.id ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={customPrice}
+                        onChange={(e) => setCustomPrice(e.target.value)}
+                        style={{
+                          width: 60,
+                          padding: 4,
+                          borderRadius: 4,
+                          border: '1px solid #ddd',
+                          fontSize: 12,
+                        }}
+                      />
+                      <span style={{ fontSize: 12 }}>€</span>
+                      <button
+                        onClick={savePrice}
+                        style={{
+                          padding: '2px 8px',
+                          borderRadius: 4,
+                          border: 'none',
+                          background: '#43a047',
+                          color: '#fff',
+                          fontSize: 11,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        ✓
+                      </button>
+                      <button
+                        onClick={() => {
+                          setEditingPriceItem(null);
+                          setCustomPrice('');
+                        }}
+                        style={{
+                          padding: '2px 8px',
+                          borderRadius: 4,
+                          border: 'none',
+                          background: '#e53935',
+                          color: '#fff',
+                          fontSize: 11,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      {item.unit_price.toFixed(2)} € / ud.
+                      <button
+                        onClick={() => handleEditPrice(item)}
+                        style={{
+                          marginLeft: 6,
+                          padding: '2px 6px',
+                          borderRadius: 4,
+                          border: '1px solid #ddd',
+                          background: '#fff',
+                          cursor: 'pointer',
+                          fontSize: 10,
+                          opacity: 0.6,
+                        }}
+                        title="Modificar precio"
+                      >
+                        ✏️
+                      </button>
+                      {item.paid_quantity > 0 && (
+                        <span style={{ color: '#43a047' }}> · {item.paid_quantity} pagada(s)</span>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
