@@ -12,6 +12,7 @@ export default function ProductosPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -103,6 +104,10 @@ export default function ProductosPage() {
 
   if (authLoading || loading) return <div style={{ padding: 24 }}>Cargando...</div>;
 
+  const filteredProducts = selectedCategory === 'all'
+    ? products
+    : products.filter((p) => p.category_id === selectedCategory);
+
   return (
     <div style={{ padding: 16, maxWidth: 1000, margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
@@ -156,6 +161,40 @@ export default function ProductosPage() {
         </div>
       </div>
 
+      <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+        <button
+          onClick={() => setSelectedCategory('all')}
+          style={{
+            padding: '6px 12px',
+            borderRadius: 16,
+            border: '1px solid #ccc',
+            background: selectedCategory === 'all' ? '#222' : '#fff',
+            color: selectedCategory === 'all' ? '#fff' : '#222',
+            fontSize: 11,
+            cursor: 'pointer',
+          }}
+        >
+          Todos
+        </button>
+        {categories.map((c) => (
+          <button
+            key={c.id}
+            onClick={() => setSelectedCategory(c.id)}
+            style={{
+              padding: '6px 12px',
+              borderRadius: 16,
+              border: '1px solid #ccc',
+              background: selectedCategory === c.id ? '#222' : '#fff',
+              color: selectedCategory === c.id ? '#fff' : '#222',
+              fontSize: 11,
+              cursor: 'pointer',
+            }}
+          >
+            {c.name}
+          </button>
+        ))}
+      </div>
+
       <div style={{ background: '#fff', borderRadius: 10, border: '1px solid #eee', overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
@@ -168,7 +207,7 @@ export default function ProductosPage() {
             </tr>
           </thead>
           <tbody>
-            {products.map((p) => (
+            {filteredProducts.map((p) => (
               <tr key={p.id} style={{ borderBottom: '1px solid #eee' }}>
                 <td style={{ padding: 10 }}>
                   <div style={{ fontWeight: 600, fontSize: 13 }}>{p.name}</div>

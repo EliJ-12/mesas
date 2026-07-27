@@ -91,22 +91,29 @@ export default function MesasGestionPage() {
 
   if (authLoading || loading) return <div style={{ padding: 24 }}>Cargando...</div>;
 
+  // Agrupar mesas por zona
+  const tablesByZone = zones.map((zone) => ({
+    zone,
+    tables: tables.filter((t) => t.zone_id === zone.id),
+  }));
+
   return (
-    <div style={{ padding: 24, maxWidth: 1000, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h1 style={{ margin: 0 }}>Gestión de Mesas</h1>
-        <div style={{ display: 'flex', gap: 10 }}>
+    <div style={{ padding: 16, maxWidth: 1000, margin: '0 auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
+        <h1 style={{ margin: 0, fontSize: 20 }}>Gestión de Mesas</h1>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <button
             onClick={() => router.push('/mesas')}
             style={{
-              padding: 10,
-              borderRadius: 8,
+              padding: 8,
+              borderRadius: 6,
               border: '1px solid #ddd',
               background: '#fff',
               cursor: 'pointer',
+              fontSize: 12,
             }}
           >
-            ← Volver a mesas
+            ← Mesas
           </button>
           <button
             onClick={() => {
@@ -115,91 +122,115 @@ export default function MesasGestionPage() {
               setShowModal(true);
             }}
             style={{
-              padding: '10px 20px',
-              borderRadius: 8,
+              padding: '8px 16px',
+              borderRadius: 6,
               border: 'none',
               background: '#222',
               color: '#fff',
               cursor: 'pointer',
               fontWeight: 600,
+              fontSize: 12,
             }}
           >
-            + Nueva mesa
+            + Nueva
           </button>
         </div>
       </div>
 
-      <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #eee', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ background: '#fafafa', borderBottom: '2px solid #eee' }}>
-              <th style={{ padding: 12, textAlign: 'left', fontSize: 13, fontWeight: 600 }}>Número</th>
-              <th style={{ padding: 12, textAlign: 'left', fontSize: 13, fontWeight: 600 }}>Zona</th>
-              <th style={{ padding: 12, textAlign: 'left', fontSize: 13, fontWeight: 600 }}>Estado</th>
-              <th style={{ padding: 12, textAlign: 'center', fontSize: 13, fontWeight: 600 }}>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tables.map((t) => (
-              <tr key={t.id} style={{ borderBottom: '1px solid #eee' }}>
-                <td style={{ padding: 12, fontWeight: 700, fontSize: 16 }}>Mesa {t.number}</td>
-                <td style={{ padding: 12, opacity: 0.7 }}>{t.zones?.name || '-'}</td>
-                <td style={{ padding: 12 }}>
-                  <span
-                    style={{
-                      padding: '4px 10px',
-                      borderRadius: 12,
-                      fontSize: 12,
-                      fontWeight: 600,
-                      background:
-                        t.status === 'free'
-                          ? '#e8f5e9'
-                          : t.status === 'occupied'
-                          ? '#fff8e1'
-                          : '#ffebee',
-                      color:
-                        t.status === 'free'
-                          ? '#43a047'
-                          : t.status === 'occupied'
-                          ? '#fb8c00'
-                          : '#e53935',
-                    }}
-                  >
-                    {t.status === 'free' ? 'Libre' : t.status === 'occupied' ? 'Ocupada' : 'Cobrar'}
-                  </span>
-                </td>
-                <td style={{ padding: 12, textAlign: 'center' }}>
-                  <button
-                    onClick={() => handleEdit(t)}
-                    style={{
-                      padding: 6,
-                      borderRadius: 4,
-                      border: '1px solid #ddd',
-                      background: '#fff',
-                      cursor: 'pointer',
-                      marginRight: 4,
-                    }}
-                  >
-                    ✏️
-                  </button>
-                  <button
-                    onClick={() => handleDelete(t.id)}
-                    style={{
-                      padding: 6,
-                      borderRadius: 4,
-                      border: '1px solid #ddd',
-                      background: '#fff',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    🗑️
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {tablesByZone.map(({ zone, tables: zoneTables }) => {
+        const isInterior = zone.name.toLowerCase().includes('interior');
+        return (
+          <div key={zone.id} style={{ marginBottom: 24 }}>
+            <div style={{
+              background: isInterior ? '#e3f2fd' : '#fff3e0',
+              padding: '12px 16px',
+              borderRadius: '8px 8px 0 0',
+              borderBottom: `2px solid ${isInterior ? '#2196f3' : '#ff9800'}`,
+            }}>
+              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: isInterior ? '#1565c0' : '#e65100' }}>
+                {zone.name}
+              </h2>
+            </div>
+          <div style={{ background: '#fff', borderRadius: '0 0 8px 8px', border: '1px solid #eee', borderTop: 'none', overflow: 'hidden' }}>
+            {zoneTables.length === 0 ? (
+              <div style={{ padding: 20, textAlign: 'center', opacity: 0.6, fontSize: 13 }}>
+                No hay mesas en esta zona
+              </div>
+            ) : (
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ background: '#fafafa', borderBottom: '1px solid #eee' }}>
+                    <th style={{ padding: 10, textAlign: 'left', fontSize: 12, fontWeight: 600 }}>Número</th>
+                    <th style={{ padding: 10, textAlign: 'left', fontSize: 12, fontWeight: 600 }}>Estado</th>
+                    <th style={{ padding: 10, textAlign: 'center', fontSize: 12, fontWeight: 600 }}>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {zoneTables.map((t) => (
+                    <tr key={t.id} style={{ borderBottom: '1px solid #eee' }}>
+                      <td style={{ padding: 10, fontWeight: 700, fontSize: 14 }}>Mesa {t.number}</td>
+                      <td style={{ padding: 10 }}>
+                        <span
+                          style={{
+                            padding: '3px 8px',
+                            borderRadius: 10,
+                            fontSize: 11,
+                            fontWeight: 600,
+                            background:
+                              t.status === 'free'
+                                ? '#e8f5e9'
+                                : t.status === 'occupied'
+                                ? '#fff8e1'
+                                : '#ffebee',
+                            color:
+                              t.status === 'free'
+                                ? '#43a047'
+                                : t.status === 'occupied'
+                                ? '#fb8c00'
+                                : '#e53935',
+                          }}
+                        >
+                          {t.status === 'free' ? 'Libre' : t.status === 'occupied' ? 'Ocupada' : 'Cobrar'}
+                        </span>
+                      </td>
+                      <td style={{ padding: 10, textAlign: 'center' }}>
+                        <button
+                          onClick={() => handleEdit(t)}
+                          style={{
+                            padding: 4,
+                            borderRadius: 4,
+                            border: '1px solid #ddd',
+                            background: '#fff',
+                            cursor: 'pointer',
+                            marginRight: 4,
+                            fontSize: 12,
+                          }}
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          onClick={() => handleDelete(t.id)}
+                          style={{
+                            padding: 4,
+                            borderRadius: 4,
+                            border: '1px solid #ddd',
+                            background: '#fff',
+                            cursor: 'pointer',
+                            fontSize: 12,
+                          }}
+                        >
+                          🗑️
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </div>
+        );
+      })}
 
       {showModal && (
         <div style={overlayStyle}>
