@@ -30,8 +30,10 @@ export default function MesasGestionPage() {
       supabase.from('zones').select('*').order('sort_order'),
       supabase.from('tables').select('*, zones(name)').order('number'),
     ]);
-    if (zonesRes.error) console.error(zonesRes.error);
-    if (tablesRes.error) console.error(tablesRes.error);
+    console.log('Zones response:', zonesRes);
+    console.log('Tables response:', tablesRes);
+    if (zonesRes.error) console.error('Zones error:', zonesRes.error);
+    if (tablesRes.error) console.error('Tables error:', tablesRes.error);
     setZones(zonesRes.data || []);
     setTables(tablesRes.data || []);
     setLoading(false);
