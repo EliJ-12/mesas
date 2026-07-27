@@ -20,6 +20,17 @@ export default function MesaDetailPage() {
     }
   };
 
+  const toggleTableStatus = async () => {
+    const { data: table } = await supabase.from('tables').select('status').eq('id', id).single();
+    if (!table) return;
+    
+    const newStatus = table.status === 'free' ? 'occupied' : 'free';
+    const { error } = await supabase.from('tables').update({ status: newStatus }).eq('id', id);
+    if (error) {
+      alert('Error al cambiar estado de la mesa: ' + error.message);
+    }
+  };
+
   if (loading) return <div style={{ padding: 24 }}>Cargando...</div>;
 
   const total = items.reduce((s, i) => s + i.unit_price * i.quantity, 0);
@@ -32,7 +43,23 @@ export default function MesaDetailPage() {
         ← Volver a mesas
       </button>
 
-      <h1>Mesa</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1>Mesa</h1>
+        <button
+          onClick={toggleTableStatus}
+          style={{
+            padding: '8px 16px',
+            borderRadius: 8,
+            border: '1px solid #ddd',
+            background: '#fff',
+            cursor: 'pointer',
+            fontSize: 13,
+            fontWeight: 600,
+          }}
+        >
+          🔄 Cambiar estado
+        </button>
+      </div>
 
       {items.length === 0 && (
         <p style={{ opacity: 0.6, marginTop: 20 }}>No hay productos añadidos todavía.</p>
