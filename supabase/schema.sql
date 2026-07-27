@@ -197,12 +197,39 @@ create policy "staff_all_payment_items" on payment_items for all using (auth.rol
 -- =========================================================
 insert into categories (name, sort_order) values ('Bebidas', 1), ('Tapas', 2), ('Postres', 3);
 
+-- Recrear zonas si no existen
+insert into zones (name, sort_order)
+select 'Interior', 1
+where not exists (select 1 from zones where name = 'Interior');
+
+insert into zones (name, sort_order)
+select 'Exterior', 2
+where not exists (select 1 from zones where name = 'Exterior');
+
+-- Recrear mesas de ejemplo si no existen
 do $$
 declare v_int uuid; v_ext uuid;
 begin
   select id into v_int from zones where name = 'Interior';
   select id into v_ext from zones where name = 'Exterior';
-  insert into tables (number, zone_id) values
-    (1, v_int), (2, v_int), (3, v_int), (4, v_int),
-    (1, v_ext), (2, v_ext), (3, v_ext);
+
+  if v_int is not null then
+    insert into tables (number, zone_id)
+    select 1, v_int where not exists (select 1 from tables where number = 1 and zone_id = v_int);
+    insert into tables (number, zone_id)
+    select 2, v_int where not exists (select 1 from tables where number = 2 and zone_id = v_int);
+    insert into tables (number, zone_id)
+    select 3, v_int where not exists (select 1 from tables where number = 3 and zone_id = v_int);
+    insert into tables (number, zone_id)
+    select 4, v_int where not exists (select 1 from tables where number = 4 and zone_id = v_int);
+  end if;
+
+  if v_ext is not null then
+    insert into tables (number, zone_id)
+    select 1, v_ext where not exists (select 1 from tables where number = 1 and zone_id = v_ext);
+    insert into tables (number, zone_id)
+    select 2, v_ext where not exists (select 1 from tables where number = 2 and zone_id = v_ext);
+    insert into tables (number, zone_id)
+    select 3, v_ext where not exists (select 1 from tables where number = 3 and zone_id = v_ext);
+  end if;
 end $$;
