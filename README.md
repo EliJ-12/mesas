@@ -35,6 +35,8 @@ mesas-app/
     ├── page.js              # redirige a /mesas
     ├── mesas/
     │   ├── page.js          # grid de mesas (interior/exterior) + login
+    │   ├── gestion/
+    │   │   └── page.js     # gestión CRUD de mesas
     │   └── [id]/page.js     # detalle de mesa + cobro + pedir cuenta
     ├── productos/
     │   └── page.js         # gestión CRUD de productos
@@ -116,3 +118,6 @@ npm run dev
   libera la mesa cuando `total_pending = 0`.
 - La vista `table_totals` es la que alimenta el grid principal — puedes
   extenderla si necesitas más columnas (ej. tiempo abierta, camarero asignado).
+
+
+#tyswez-pavveq-wygnA1

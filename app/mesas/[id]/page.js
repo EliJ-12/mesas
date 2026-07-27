@@ -69,6 +69,18 @@ export default function MesaDetailPage() {
                 </button>
                 <span style={{ minWidth: 20, textAlign: 'center' }}>{item.quantity}</span>
                 <button onClick={() => changeItemQuantity(item, 1)} style={qtyBtn}>+</button>
+                <button
+                  onClick={() => changeItemQuantity(item, -item.quantity)}
+                  style={{
+                    ...qtyBtn,
+                    background: '#ffebee',
+                    borderColor: '#e53935',
+                    color: '#e53935',
+                  }}
+                  title="Eliminar producto"
+                >
+                  🗑️
+                </button>
               </div>
             </div>
           );

@@ -57,6 +57,21 @@ export default function MesasPage() {
         <h1 style={{ margin: 0 }}>Mesas</h1>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <Link
+            href="/mesas/gestion"
+            style={{
+              padding: 8,
+              borderRadius: 8,
+              border: '1px solid #ddd',
+              background: '#fff',
+              cursor: 'pointer',
+              fontSize: 13,
+              textDecoration: 'none',
+              color: '#222',
+            }}
+          >
+            🪑 Gestionar mesas
+          </Link>
+          <Link
             href="/productos"
             style={{
               padding: 8,
