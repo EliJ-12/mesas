@@ -26,8 +26,8 @@ export default function ProductPicker({ tableId, onClose }) {
     : products;
 
   return (
-    <div style={overlayStyle}>
-      <div style={modalStyle}>
+    <div style={overlayStyle} onClick={onClose}>
+      <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2>Añadir producto</h2>
           <button onClick={onClose} style={closeBtn}>✕</button>

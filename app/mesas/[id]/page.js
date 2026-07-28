@@ -57,6 +57,9 @@ export default function MesaDetailPage() {
   const totalPending = items.reduce((s, i) => s + i.unit_price * (i.quantity - i.paid_quantity), 0);
   const totalPaid = total - totalPending;
 
+  const paidItems = items.filter((i) => i.paid_quantity > 0);
+  const pendingItems = items.filter((i) => i.quantity - i.paid_quantity > 0);
+
   return (
     <div style={{ padding: 16, maxWidth: 600, margin: '0 auto', paddingBottom: 120 }}>
       <button onClick={() => router.push('/mesas')} style={{ border: 'none', background: 'none', marginBottom: 10, cursor: 'pointer', fontSize: 14 }}>
@@ -85,122 +88,186 @@ export default function MesaDetailPage() {
         <p style={{ opacity: 0.6, marginTop: 20 }}>No hay productos añadidos todavía.</p>
       )}
 
-      <div style={{ marginTop: 16 }}>
-        {items.map((item) => {
-          const pending = item.quantity - item.paid_quantity;
-          return (
-            <div
-              key={item.id}
-              style={{
-                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                padding: '12px 0', borderBottom: '1px solid #eee',
-              }}
-            >
-              <div>
-                <div style={{ fontWeight: 600 }}>{item.product_name}</div>
-                <div style={{ fontSize: 12, opacity: 0.6 }}>
-                  {editingPriceItem?.id === item.id ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={customPrice}
-                        onChange={(e) => setCustomPrice(e.target.value)}
-                        style={{
-                          width: 60,
-                          padding: 4,
-                          borderRadius: 4,
-                          border: '1px solid #ddd',
-                          fontSize: 12,
-                        }}
-                      />
-                      <span style={{ fontSize: 12 }}>€</span>
-                      <button
-                        onClick={savePrice}
-                        style={{
-                          padding: '2px 8px',
-                          borderRadius: 4,
-                          border: 'none',
-                          background: '#43a047',
-                          color: '#fff',
-                          fontSize: 11,
-                          cursor: 'pointer',
-                        }}
-                      >
-                        ✓
-                      </button>
-                      <button
-                        onClick={() => {
-                          setEditingPriceItem(null);
-                          setCustomPrice('');
-                        }}
-                        style={{
-                          padding: '2px 8px',
-                          borderRadius: 4,
-                          border: 'none',
-                          background: '#e53935',
-                          color: '#fff',
-                          fontSize: 11,
-                          cursor: 'pointer',
-                        }}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ) : (
-                    <>
-                      {item.unit_price.toFixed(2)} € / ud.
-                      <button
-                        onClick={() => handleEditPrice(item)}
-                        style={{
-                          marginLeft: 6,
-                          padding: '2px 6px',
-                          borderRadius: 4,
-                          border: '1px solid #ddd',
-                          background: '#fff',
-                          cursor: 'pointer',
-                          fontSize: 10,
-                          opacity: 0.6,
-                        }}
-                        title="Modificar precio"
-                      >
-                        ✏️
-                      </button>
-                      {item.paid_quantity > 0 && (
-                        <span style={{ color: '#43a047' }}> · {item.paid_quantity} pagada(s)</span>
-                      )}
-                    </>
-                  )}
+      {/* Productos pendientes */}
+      {pendingItems.length > 0 && (
+        <div style={{ marginTop: 16 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, opacity: 0.6, marginBottom: 8, textTransform: 'uppercase' }}>
+            Pendientes de pago
+          </div>
+          {pendingItems.map((item) => {
+            const pending = item.quantity - item.paid_quantity;
+            return (
+              <div
+                key={item.id}
+                style={{
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  padding: '12px 0', borderBottom: '1px solid #eee',
+                }}
+              >
+                <div>
+                  <div style={{ fontWeight: 600 }}>{item.product_name}</div>
+                  <div style={{ fontSize: 12, opacity: 0.6 }}>
+                    {editingPriceItem?.id === item.id ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={customPrice}
+                          onChange={(e) => setCustomPrice(e.target.value)}
+                          style={{
+                            width: 60,
+                            padding: 4,
+                            borderRadius: 4,
+                            border: '1px solid #ddd',
+                            fontSize: 12,
+                          }}
+                        />
+                        <span style={{ fontSize: 12 }}>€</span>
+                        <button
+                          onClick={savePrice}
+                          style={{
+                            padding: '2px 8px',
+                            borderRadius: 4,
+                            border: 'none',
+                            background: '#43a047',
+                            color: '#fff',
+                            fontSize: 11,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          ✓
+                        </button>
+                        <button
+                          onClick={() => {
+                            setEditingPriceItem(null);
+                            setCustomPrice('');
+                          }}
+                          style={{
+                            padding: '2px 8px',
+                            borderRadius: 4,
+                            border: 'none',
+                            background: '#e53935',
+                            color: '#fff',
+                            fontSize: 11,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        {item.unit_price.toFixed(2)} € / ud.
+                        <button
+                          onClick={() => handleEditPrice(item)}
+                          style={{
+                            marginLeft: 6,
+                            padding: '2px 6px',
+                            borderRadius: 4,
+                            border: '1px solid #ddd',
+                            background: '#fff',
+                            cursor: 'pointer',
+                            fontSize: 10,
+                            opacity: 0.6,
+                          }}
+                          title="Modificar precio"
+                        >
+                          ✏️
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <button
+                    disabled={pending <= 0}
+                    onClick={() => changeItemQuantity(item, -1)}
+                    style={qtyBtn}
+                  >
+                    -
+                  </button>
+                  <span style={{ minWidth: 20, textAlign: 'center' }}>{item.quantity}</span>
+                  <button onClick={() => changeItemQuantity(item, 1)} style={qtyBtn}>+</button>
+                  <button
+                    onClick={() => changeItemQuantity(item, -item.quantity)}
+                    style={{
+                      ...qtyBtn,
+                      background: '#ffebee',
+                      borderColor: '#e53935',
+                      color: '#e53935',
+                    }}
+                    title="Eliminar producto"
+                  >
+                    🗑️
+                  </button>
                 </div>
               </div>
+            );
+          })}
+        </div>
+      )}
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <button
-                  disabled={pending <= 0 && item.paid_quantity >= item.quantity}
-                  onClick={() => changeItemQuantity(item, -1)}
-                  style={qtyBtn}
-                >
-                  -
-                </button>
-                <span style={{ minWidth: 20, textAlign: 'center' }}>{item.quantity}</span>
-                <button onClick={() => changeItemQuantity(item, 1)} style={qtyBtn}>+</button>
-                <button
-                  onClick={() => changeItemQuantity(item, -item.quantity)}
-                  style={{
-                    ...qtyBtn,
-                    background: '#ffebee',
-                    borderColor: '#e53935',
-                    color: '#e53935',
-                  }}
-                  title="Eliminar producto"
-                >
-                  🗑️
-                </button>
+      {/* Productos pagados */}
+      {paidItems.length > 0 && (
+        <div style={{ marginTop: 20, padding: 12, background: '#f5f5f5', borderRadius: 8 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, opacity: 0.6, marginBottom: 8, textTransform: 'uppercase' }}>
+            Ya pagados
+          </div>
+          {paidItems.map((item) => {
+            const pending = item.quantity - item.paid_quantity;
+            return (
+              <div
+                key={item.id}
+                style={{
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  padding: '12px 0', borderBottom: '1px solid #e0e0e0',
+                }}
+              >
+                <div>
+                  <div style={{ fontWeight: 600 }}>{item.product_name}</div>
+                  <div style={{ fontSize: 12, opacity: 0.6 }}>
+                    {item.unit_price.toFixed(2)} € / ud.
+                    <span style={{ color: '#43a047', marginLeft: 6 }}>· {item.paid_quantity} pagada(s)</span>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  {pending > 0 && (
+                    <>
+                      <button
+                        onClick={() => changeItemQuantity(item, -1)}
+                        style={qtyBtn}
+                      >
+                        -
+                      </button>
+                      <span style={{ minWidth: 20, textAlign: 'center' }}>{item.quantity}</span>
+                      <button onClick={() => changeItemQuantity(item, 1)} style={qtyBtn}>+</button>
+                    </>
+                  )}
+                  {pending === 0 && (
+                    <span style={{ fontSize: 12, opacity: 0.6, minWidth: 60, textAlign: 'center' }}>
+                      {item.quantity} ud.
+                    </span>
+                  )}
+                  <button
+                    onClick={() => changeItemQuantity(item, -item.quantity)}
+                    style={{
+                      ...qtyBtn,
+                      background: '#ffebee',
+                      borderColor: '#e53935',
+                      color: '#e53935',
+                    }}
+                    title="Eliminar producto"
+                  >
+                    🗑️
+                  </button>
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       <div style={{ marginTop: 20, padding: 14, background: '#fafafa', borderRadius: 10 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
@@ -236,19 +303,9 @@ export default function MesaDetailPage() {
         >
           🔔 Cuenta
         </button>
-        <button
-          onClick={() => setShowCheckout(true)}
-          disabled={!order || totalPending <= 0}
-          style={{ ...primaryBtn, opacity: !order || totalPending <= 0 ? 0.4 : 1 }}
-        >
-          Cobrar
-        </button>
       </div>
 
       {showPicker && <ProductPicker tableId={id} onClose={() => setShowPicker(false)} />}
-      {showCheckout && order && (
-        <CheckoutModal order={order} items={items} onClose={() => setShowCheckout(false)} />
-      )}
     </div>
   );
 }

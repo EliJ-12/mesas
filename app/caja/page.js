@@ -48,6 +48,17 @@ export default function CajaPage() {
     setLoading(false);
   };
 
+  const handleDelete = async (paymentId) => {
+    if (!confirm('¿Eliminar este registro de caja? Esta acción no se puede deshacer.')) return;
+    
+    const { error } = await supabase.from('payments').delete().eq('id', paymentId);
+    if (error) {
+      alert('Error al eliminar: ' + error.message);
+      return;
+    }
+    loadPayments();
+  };
+
   const totals = payments.reduce(
     (acc, p) => {
       if (p.method === 'cash') acc.cash += p.amount;
@@ -137,12 +148,13 @@ export default function CajaPage() {
               <th style={{ padding: 12, textAlign: 'left', fontSize: 13, fontWeight: 600 }}>Método</th>
               <th style={{ padding: 12, textAlign: 'right', fontSize: 13, fontWeight: 600 }}>Importe</th>
               <th style={{ padding: 12, textAlign: 'left', fontSize: 13, fontWeight: 600 }}>Nota</th>
+              <th style={{ padding: 12, textAlign: 'center', fontSize: 13, fontWeight: 600 }}>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {payments.length === 0 ? (
               <tr>
-                <td colSpan={5} style={{ padding: 24, textAlign: 'center', opacity: 0.6 }}>
+                <td colSpan={6} style={{ padding: 24, textAlign: 'center', opacity: 0.6 }}>
                   No hay cobros para esta fecha
                 </td>
               </tr>
@@ -169,6 +181,22 @@ export default function CajaPage() {
                   </td>
                   <td style={{ padding: 12, textAlign: 'right', fontWeight: 700 }}>{p.amount.toFixed(2)} €</td>
                   <td style={{ padding: 12, opacity: 0.7, fontSize: 13 }}>{p.note || '-'}</td>
+                  <td style={{ padding: 12, textAlign: 'center' }}>
+                    <button
+                      onClick={() => handleDelete(p.id)}
+                      style={{
+                        padding: 4,
+                        borderRadius: 4,
+                        border: '1px solid #ddd',
+                        background: '#fff',
+                        cursor: 'pointer',
+                        fontSize: 12,
+                      }}
+                      title="Eliminar registro"
+                    >
+                      🗑️
+                    </button>
+                  </td>
                 </tr>
               ))
             )}

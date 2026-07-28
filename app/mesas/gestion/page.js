@@ -15,6 +15,7 @@ export default function MesasGestionPage() {
   const [formData, setFormData] = useState({
     number: '',
     zone_id: '',
+    status: 'free',
   });
 
   useEffect(() => {
@@ -44,6 +45,7 @@ export default function MesasGestionPage() {
     const payload = {
       number: parseInt(formData.number),
       zone_id: formData.zone_id || null,
+      status: formData.status,
     };
 
     let error;
@@ -62,7 +64,7 @@ export default function MesasGestionPage() {
 
     setShowModal(false);
     setEditingTable(null);
-    setFormData({ number: '', zone_id: '' });
+    setFormData({ number: '', zone_id: '', status: 'free' });
     loadData();
   };
 
@@ -71,6 +73,7 @@ export default function MesasGestionPage() {
     setFormData({
       number: table.number.toString(),
       zone_id: table.zone_id || '',
+      status: table.status || 'free',
     });
     setShowModal(true);
   };
@@ -255,7 +258,7 @@ export default function MesasGestionPage() {
                 />
               </div>
 
-              <div style={{ marginBottom: 20 }}>
+              <div style={{ marginBottom: 16 }}>
                 <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600 }}>
                   Zona
                 </label>
@@ -269,6 +272,21 @@ export default function MesasGestionPage() {
                   {zones.map((z) => (
                     <option key={z.id} value={z.id}>{z.name}</option>
                   ))}
+                </select>
+              </div>
+
+              <div style={{ marginBottom: 20 }}>
+                <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600 }}>
+                  Estado
+                </label>
+                <select
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                  style={inputStyle}
+                >
+                  <option value="free">Libre</option>
+                  <option value="occupied">Ocupada</option>
+                  <option value="to_pay">Cobrar</option>
                 </select>
               </div>
 

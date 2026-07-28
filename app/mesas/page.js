@@ -47,9 +47,15 @@ export default function MesasPage() {
 
   if (loading) return <div style={{ padding: 24 }}>Cargando mesas...</div>;
 
-  // Agrupar por zona (usa sort_order de la zona)
+  // Agrupar por zona (primero exterior, luego interior)
   const zones = [...new Map(tables.map((t) => [t.zone_id, t.zones])).entries()]
-    .sort((a, b) => (a[1]?.sort_order || 0) - (b[1]?.sort_order || 0));
+    .sort((a, b) => {
+      const aIsExterior = a[1]?.name?.toLowerCase().includes('exterior');
+      const bIsExterior = b[1]?.name?.toLowerCase().includes('exterior');
+      if (aIsExterior && !bIsExterior) return -1;
+      if (!aIsExterior && bIsExterior) return 1;
+      return (a[1]?.sort_order || 0) - (b[1]?.sort_order || 0);
+    });
 
   return (
     <div style={{ padding: 16, maxWidth: 1000, margin: '0 auto' }}>
