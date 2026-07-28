@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useOrderRealtime, changeItemQuantity } from '@/lib/useOrderRealtime';
 import ProductPicker from '@/components/ProductPicker';
@@ -14,6 +14,25 @@ export default function MesaDetailPage() {
   const [showCheckout, setShowCheckout] = useState(false);
   const [editingPriceItem, setEditingPriceItem] = useState(null);
   const [customPrice, setCustomPrice] = useState('');
+  const [tableStatus, setTableStatus] = useState('free');
+
+  useEffect(() => {
+    const loadTableStatus = async () => {
+      const { data: table } = await supabase.from('tables').select('status').eq('id', id).single();
+      if (table) setTableStatus(table.status);
+    };
+    loadTableStatus();
+
+    // Suscribirse a cambios en la mesa
+    const subscription = supabase
+      .channel('table-status')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'tables', filter: `id=eq.${id}` }, (payload) => {
+        setTableStatus(payload.new.status);
+      })
+      .subscribe();
+
+    return () => subscription.unsubscribe();
+  }, [id]);
 
   const markAsToPay = async () => {
     const { error } = await supabase.from('tables').update({ status: 'to_pay' }).eq('id', id);
@@ -67,7 +86,31 @@ export default function MesaDetailPage() {
       </button>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <h1 style={{ margin: 0, fontSize: 24 }}>Mesa</h1>
+        <div>
+          <h1 style={{ margin: 0, fontSize: 24 }}>Mesa</h1>
+          <span
+            style={{
+              padding: '4px 10px',
+              borderRadius: 12,
+              fontSize: 11,
+              fontWeight: 600,
+              background:
+                tableStatus === 'free'
+                  ? '#e8f5e9'
+                  : tableStatus === 'occupied'
+                  ? '#fff8e1'
+                  : '#ffebee',
+              color:
+                tableStatus === 'free'
+                  ? '#43a047'
+                  : tableStatus === 'occupied'
+                  ? '#fb8c00'
+                  : '#e53935',
+            }}
+          >
+            {tableStatus === 'free' ? 'Libre' : tableStatus === 'occupied' ? 'Ocupada' : 'Cobrar'}
+          </span>
+        </div>
         <button
           onClick={toggleTableStatus}
           style={{
@@ -233,23 +276,9 @@ export default function MesaDetailPage() {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  {pending > 0 && (
-                    <>
-                      <button
-                        onClick={() => changeItemQuantity(item, -1)}
-                        style={qtyBtn}
-                      >
-                        -
-                      </button>
-                      <span style={{ minWidth: 20, textAlign: 'center' }}>{item.quantity}</span>
-                      <button onClick={() => changeItemQuantity(item, 1)} style={qtyBtn}>+</button>
-                    </>
-                  )}
-                  {pending === 0 && (
-                    <span style={{ fontSize: 12, opacity: 0.6, minWidth: 60, textAlign: 'center' }}>
-                      {item.quantity} ud.
-                    </span>
-                  )}
+                  <span style={{ fontSize: 12, opacity: 0.6, minWidth: 60, textAlign: 'center' }}>
+                    {item.paid_quantity} ud.
+                  </span>
                   <button
                     onClick={() => changeItemQuantity(item, -item.quantity)}
                     style={{
