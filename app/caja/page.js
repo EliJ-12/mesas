@@ -11,6 +11,7 @@ export default function CajaPage() {
   const [loading, setLoading] = useState(true);
   const [filterDate, setFilterDate] = useState(new Date().toISOString().split('T')[0]);
   const [filterMethod, setFilterMethod] = useState('all');
+  const [filterPeriod, setFilterPeriod] = useState('day');
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -18,9 +19,39 @@ export default function CajaPage() {
       return;
     }
     loadPayments();
-  }, [user, authLoading, router, filterDate, filterMethod]);
+  }, [user, authLoading, router, filterDate, filterMethod, filterPeriod]);
 
   const loadPayments = async () => {
+    let startDate, endDate;
+    const now = new Date();
+
+    switch (filterPeriod) {
+      case 'day':
+        startDate = new Date(filterDate);
+        endDate = new Date(new Date(filterDate).getTime() + 86400000);
+        break;
+      case 'week':
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - now.getDay());
+        weekStart.setHours(0, 0, 0, 0);
+        startDate = weekStart;
+        endDate = new Date(weekStart.getTime() + 7 * 86400000);
+        break;
+      case 'month':
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        startDate = monthStart;
+        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        break;
+      case 'year':
+        const yearStart = new Date(now.getFullYear(), 0, 1);
+        startDate = yearStart;
+        endDate = new Date(now.getFullYear() + 1, 0, 1);
+        break;
+      default:
+        startDate = new Date(filterDate);
+        endDate = new Date(new Date(filterDate).getTime() + 86400000);
+    }
+
     let query = supabase
       .from('payments')
       .select(`
@@ -32,8 +63,8 @@ export default function CajaPage() {
           order_items (product_name, quantity)
         )
       `)
-      .gte('created_at', new Date(filterDate).toISOString())
-      .lt('created_at', new Date(new Date(filterDate).getTime() + 86400000).toISOString())
+      .gte('created_at', startDate.toISOString())
+      .lt('created_at', endDate.toISOString())
       .order('created_at', { ascending: false });
 
     if (filterMethod !== 'all') {
@@ -91,19 +122,40 @@ export default function CajaPage() {
 
       <div style={{ display: 'flex', gap: 16, marginBottom: 24, flexWrap: 'wrap' }}>
         <div>
-          <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 600 }}>Fecha</label>
-          <input
-            type="date"
-            value={filterDate}
-            onChange={(e) => setFilterDate(e.target.value)}
+          <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 600 }}>Periodo</label>
+          <select
+            value={filterPeriod}
+            onChange={(e) => setFilterPeriod(e.target.value)}
             style={{
               padding: 10,
               borderRadius: 8,
               border: '1px solid #ddd',
               fontSize: 14,
+              minWidth: 120,
             }}
-          />
+          >
+            <option value="day">Día</option>
+            <option value="week">Semana</option>
+            <option value="month">Mes</option>
+            <option value="year">Año</option>
+          </select>
         </div>
+        {filterPeriod === 'day' && (
+          <div>
+            <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 600 }}>Fecha</label>
+            <input
+              type="date"
+              value={filterDate}
+              onChange={(e) => setFilterDate(e.target.value)}
+              style={{
+                padding: 10,
+                borderRadius: 8,
+                border: '1px solid #ddd',
+                fontSize: 14,
+              }}
+            />
+          </div>
+        )}
         <div>
           <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 600 }}>Método</label>
           <select

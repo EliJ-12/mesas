@@ -291,21 +291,18 @@ export default function MesaDetailPage() {
           + Producto
         </button>
         <button
-          onClick={markAsToPay}
-          disabled={!order}
-          style={{
-            ...secondaryBtn,
-            opacity: !order ? 0.4 : 1,
-            background: '#ffebee',
-            borderColor: '#e53935',
-            color: '#e53935',
-          }}
+          onClick={() => setShowCheckout(true)}
+          disabled={!order || totalPending <= 0}
+          style={{ ...primaryBtn, opacity: !order || totalPending <= 0 ? 0.4 : 1 }}
         >
-          🔔 Cuenta
+          Cobrar
         </button>
       </div>
 
       {showPicker && <ProductPicker tableId={id} onClose={() => setShowPicker(false)} />}
+      {showCheckout && order && (
+        <CheckoutModal order={order} items={items} onClose={() => setShowCheckout(false)} />
+      )}
     </div>
   );
 }
